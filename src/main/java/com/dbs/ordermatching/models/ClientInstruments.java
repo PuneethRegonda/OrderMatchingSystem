@@ -32,8 +32,13 @@ public class ClientInstruments {
 	public ClientInstruments() {
 		
 	}
-
-
+	
+	public ClientInstruments( Client clientid, Instrument instrumentid, double quantity) {
+		super();
+		this.clientid = clientid;
+		this.instrumentid = instrumentid;
+		this.quantity = quantity;
+	}
 
 	public ClientInstruments(String id, Client clientid, Instrument instrumentid, double quantity) {
 		super();

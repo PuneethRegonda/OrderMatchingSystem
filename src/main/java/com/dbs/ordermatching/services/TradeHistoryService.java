@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,10 +95,13 @@ public class TradeHistoryService {
 			BuyInstrument buyInstrument = buySellInstrumentService.loadBuyInstrumentById(id);
 			Client buyerclient = clientService.findClientById(buyInstrument.clientid.getClientid());
 			BigDecimal totalTransaction = new BigDecimal(buyInstrument.getPrice() * buyInstrument.getQuantity());
-
-			ClientInstruments buyerClientInstruments = clientInstrumentService
-					.loadClientInstrumersByCliesntIdAndInstrumentId(buyerclient, buyInstrument.getInstrumentid());
-			
+			ClientInstruments buyerClientInstruments ;
+			try {
+				buyerClientInstruments = clientInstrumentService
+						.loadClientInstrumersByCliesntIdAndInstrumentId(buyerclient, buyInstrument.getInstrumentid());
+			}catch (EntityNotFoundException e ) {
+				buyerClientInstruments = new ClientInstruments(buyerclient,buyInstrument.getInstrumentid(),0);
+			}
 			if (buyerclient.getBalance().compareTo(totalTransaction) == -1) {
 				throw new Exception("Insufficient transaction limit");
 			}
