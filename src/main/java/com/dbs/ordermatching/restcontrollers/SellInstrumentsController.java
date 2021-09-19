@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dbs.ordermatching.models.BuyInstrument;
 import com.dbs.ordermatching.models.Client;
+import com.dbs.ordermatching.models.ClientInstruments;
 import com.dbs.ordermatching.models.Result;
 import com.dbs.ordermatching.models.SellInstrument;
 import com.dbs.ordermatching.services.BuySellInstrumentService;
+import com.dbs.ordermatching.services.ClientInstrumentService;
 import com.dbs.ordermatching.services.ClientService;
 import com.dbs.ordermatching.services.TradeHistoryService;
 
@@ -39,6 +41,10 @@ public class SellInstrumentsController {
 	private TradeHistoryService tradeHistoryService;
 	@Autowired
 	private ClientService clientService;
+	
+	@Autowired
+	private ClientInstrumentService clientInstrumentService;
+	
 
 	@GetMapping("/getall/{clientid}")
 	public ResponseEntity<Result> findBuysByClientId(@PathVariable String clientid) {
@@ -73,17 +79,26 @@ public class SellInstrumentsController {
 		Result result = new Result();
 		try {
 			
-			Client client = sellinstrument.clientid;
+			
+			Client client = clientService.findClientById(sellinstrument.clientid.getClientid());
 			BigDecimal totalTransaction = new  BigDecimal(sellinstrument.getPrice()*sellinstrument.getQuantity());
-			if(client.getTransactionlimit().compareTo(totalTransaction)==-1) {
+			if(client.getBalance().compareTo(totalTransaction)==-1) {
 				throw new Exception("Insufficient Transaction Limit");
 			}
 			
+			ClientInstruments clientInstruments = clientInstrumentService.loadClientInstrumersByCliesntIdAndInstrumentId(client, sellinstrument.getInstrumentid());
+
+			if(clientInstruments.getQuantity()<sellinstrument.getQuantity())
+			{
+				throw new Exception("Insufficent instrument quantity");
+			}	
+			
+					
 			String sellinstrumentId = this.buysellinstrumentservice.updateSellInstrument(sellinstrument);
 			
-			System.out.println(sellinstrumentId);
-			this.tradeHistoryService.tradematchingEngine(sellinstrumentId, false);
-
+			System.out.println("Sell InstrumentID: "+sellinstrumentId);
+			result.data = tradeHistoryService.tradematchingEngine(sellinstrumentId, false);
+		
 			
 			
 			result.setStatus(true);

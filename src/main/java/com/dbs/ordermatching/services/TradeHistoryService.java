@@ -88,7 +88,7 @@ public class TradeHistoryService {
 		}
 	}
 
-	public void tradematchingEngine(String id, boolean isBuyRequest) throws Exception {
+	public TradeHistory tradematchingEngine(String id, boolean isBuyRequest) throws Exception {
 
 		if (isBuyRequest) {
 			BuyInstrument buyInstrument = buySellInstrumentService.loadBuyInstrumentById(id);
@@ -112,40 +112,70 @@ public class TradeHistoryService {
 			if (sellInstruments == null || sellInstruments.isEmpty()) {
 				System.out.println("No Match found");
 				throw new Exception("No Match dound partially active for now");
-			} else {
+			} 
+			else {
 				System.out.println("Match found");
-				Client sellerClient = sellInstruments.get(0).clientid;
 				SellInstrument sellInstrument = sellInstruments.get(0);
+				Client sellerClient = sellInstrument.clientid;
 				ClientInstruments sellerClientInstruments = clientInstrumentService
 						.loadClientInstrumersByCliesntIdAndInstrumentId(sellerClient, buyInstrument.getInstrumentid());
-
+				
+				
 				double totalTradeQuantityDone = onTradeMatchFound(buyInstrument, sellInstrument);
 
 				// changing client instruments/stocks
-				buyerClientInstruments.setQuantity(buyerClientInstruments.getQuantity() + buyInstrument.getQuantity());
+				buyerClientInstruments.setQuantity(buyerClientInstruments.getQuantity() + totalTradeQuantityDone);
 				sellerClientInstruments
-						.setQuantity(sellerClientInstruments.getQuantity() - buyInstrument.getQuantity());
-				onTradeSaveAllToDB(buyInstrument, buyerclient, buyerClientInstruments, sellerClient, sellInstrument,
+						.setQuantity(sellerClientInstruments.getQuantity() -totalTradeQuantityDone);
+				return onTradeSaveAllToDB(buyInstrument, buyerclient, buyerClientInstruments, sellerClient, sellInstrument,
 						sellerClientInstruments, totalTradeQuantityDone);
 
 			}
 
 		} else {
-			BuyInstrument sellInstrument = buySellInstrumentService.loadBuyInstrumentById(id);
+			SellInstrument sellInstrument = buySellInstrumentService.loadSellInstrumentById(id);
 			Client sellerclient =  clientService.findClientById(sellInstrument.clientid.getClientid());
-			ClientInstruments sellerclientInstrument = clientInstrumentService.loadClientInstrumersByCliesntIdAndInstrumentId(sellerclient, sellInstrument.getInstrumentid());
+			ClientInstruments sellerclientInstruments = clientInstrumentService.loadClientInstrumersByCliesntIdAndInstrumentId(sellerclient, sellInstrument.getInstrumentid());
 			
-			if (sellerclientInstrument.getQuantity() < sellInstrument.getQuantity()) {
+			if (sellerclientInstruments.getQuantity() < sellInstrument.getQuantity()) {
 				throw new Exception("Insufficient instrument quantity");
 			}
 			BigDecimal totalTransaction = new BigDecimal(sellInstrument.getPrice() * sellInstrument.getQuantity());
 			if (sellerclient.getBalance().compareTo(totalTransaction) == -1) {
 				throw new Exception("Insufficient Transaction Limit");
 			}
-			BuyInstrument buyInstrument = buySellInstrumentRepo
-					.findBuyInstrumentToTrade(sellerclient, sellInstrument.getPrice(), sellInstrument.getInstrumentid())
-					.get(0);
-			System.out.println(buyInstrument);
+			
+			if (sellerclient.getTransactionlimit().compareTo(totalTransaction) == -1) {
+				throw new Exception("Trade exceeds your Maximum transaction limit");
+			}
+			
+
+			List<BuyInstrument> buyInstruments = buySellInstrumentRepo
+					.findBuyInstrumentToTrade(sellerclient, sellInstrument.getPrice(), sellInstrument.getInstrumentid());
+			
+			
+			if (buyInstruments == null || buyInstruments.isEmpty()) {
+				System.out.println("No Match found");
+				throw new Exception("No Match dound partially active for now");
+			} else {
+				System.out.println("Match found");
+				BuyInstrument buyInstrument = buyInstruments.get(0);
+				Client buyerClient = buyInstrument.clientid;
+
+				ClientInstruments buyerClientInstruments = clientInstrumentService
+						.loadClientInstrumersByCliesntIdAndInstrumentId(buyerClient, buyInstrument.getInstrumentid());
+
+				double totalTradeQuantityDone = onTradeMatchFound(buyInstrument, sellInstrument);
+
+				// changing client instruments/stocks
+				buyerClientInstruments.setQuantity(buyerClientInstruments.getQuantity() + totalTradeQuantityDone);
+				sellerclientInstruments
+						.setQuantity(sellerclientInstruments.getQuantity() - totalTradeQuantityDone);
+				return onTradeSaveAllToDB(buyInstrument, buyerClient, buyerClientInstruments, sellerclient, sellInstrument,
+						sellerclientInstruments, totalTradeQuantityDone);
+
+			}
+			
 		}
 
 	}
@@ -161,7 +191,7 @@ public class TradeHistoryService {
 	 * @param sellerClientInstruments
 	 * @throws IllegalArgumentException
 	 */
-	private void onTradeSaveAllToDB(BuyInstrument buyInstrument, Client buyerclient,
+	private TradeHistory onTradeSaveAllToDB(BuyInstrument buyInstrument, Client buyerclient,
 			ClientInstruments buyerClientInstruments, Client sellerClient, SellInstrument sellInstrument,
 			ClientInstruments sellerClientInstruments, double tradeQuantity) throws IllegalArgumentException {
 		buySellInstrumentService.updateSellInstrument(sellInstrument);
@@ -172,7 +202,7 @@ public class TradeHistoryService {
 
 		TradeHistory trade = new TradeHistory(sellerClient.getCustodianid(), buyerclient.getCustodianid(), sellerClient,
 				buyerclient, buyInstrument.instrumentid, buyInstrument.getPrice(), tradeQuantity, new Date());
-		tradeHistoryRepo.save(trade);
+		return tradeHistoryRepo.save(trade);
 	}
 
 	/**

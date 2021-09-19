@@ -44,7 +44,7 @@ public class BuySellInstrumentService {
 	public String updateBuyInstrument(BuyInstrument buyinstrument) throws IllegalArgumentException{
 
 		try {
-			this.buyRepo.save(buyinstrument);
+			buyinstrument =this.buyRepo.save(buyinstrument);
 			return buyinstrument.getId();
 		} catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException(e);
@@ -54,7 +54,7 @@ public class BuySellInstrumentService {
 	public String  updateSellInstrument(SellInstrument sellinstrument) throws IllegalArgumentException{
 
 		try {
-			this.sellRepo.save(sellinstrument);
+			sellinstrument = this.sellRepo.save(sellinstrument);
 			return sellinstrument.getId();
 		} catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException(e);

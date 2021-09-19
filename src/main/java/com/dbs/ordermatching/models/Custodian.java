@@ -35,7 +35,7 @@ public class Custodian implements Serializable{
 		super();
 	    this.custodianid=custodianid;
 		this.custodianname = custodianname;
-		this.password = password;
+		this.password = "";
 	}
 	
 
@@ -70,7 +70,7 @@ public class Custodian implements Serializable{
 
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = "";
 	}
 
 	@Override

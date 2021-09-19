@@ -78,9 +78,7 @@ public class BuyInstrumentsController {
 			String buyinstrumentId = this.buysellinstrumentservice.updateBuyInstrument(buyinstrument);
 			
 			System.out.println(buyinstrumentId);
-			this.tradeHistoryService.tradematchingEngine(buyinstrumentId, true);
-			
-			
+			result.data =this.tradeHistoryService.tradematchingEngine(buyinstrumentId, true);
 			result.setStatus(true);
 			result.setMessage("BuyInstrument saved successfully");
 			return ResponseEntity.status(HttpStatus.OK).body(result);	
