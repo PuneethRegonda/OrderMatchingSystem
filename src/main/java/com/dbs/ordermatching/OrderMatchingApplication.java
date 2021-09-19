@@ -23,19 +23,7 @@ public class OrderMatchingApplication {
 	}
 
 	
-//	@PostConstruct
-//	public void initialize() {
-//		System.out.println("initialize");
-//		List<Custodian> accs = Stream.of(
-//				new Custodian("raghuvaran", "Bank of America",encoder().encode("raghuvaran") ),
-//				new Custodian("raghuvaran1", "Bank of China", encoder().encode("raghuvaran1")),
-//				new Custodian("raghuvaran2", "Canadian Bank",encoder().encode("raghuvaran2")),
-//				new Custodian("raghuvaran3","The Swiss Group", encoder().encode("raghuvaran3")),
-//				new Custodian("raghuvaran5","State Bank of india", encoder().encode("password"))).collect(Collectors.toList());
-//
-//		repo1.saveAll(accs);
-//
-//	}
+
 	
 	@Bean
 	public PasswordEncoder encoder()
@@ -43,14 +31,14 @@ public class OrderMatchingApplication {
 		return new BCryptPasswordEncoder();
 	}
 	
-	@Autowired
-	private TradeHistoryRepository repo ;
-	
-	@Bean
-	public void runpro() {
-		String sellid = repo.TRADEMATCH_ALGO(1, "093086e10e6240c8b6fea498e20cd15c");
-		System.out.println(sellid);
-	}
+//	@Autowired
+//	private TradeHistoryRepository repo ;
+//	
+//	@Bean
+//	public void runpro() {
+//		String sellid = repo.TRADEMATCH_ALGO(1, "093086e10e6240c8b6fea498e20cd15c");
+//		System.out.println(sellid);
+//	}
 
 	
 }

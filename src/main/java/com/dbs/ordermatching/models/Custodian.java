@@ -70,7 +70,7 @@ public class Custodian implements Serializable{
 
 
 	public void setPassword(String password) {
-		this.password = "";
+		this.password = password;
 	}
 
 	@Override
@@ -78,9 +78,5 @@ public class Custodian implements Serializable{
 		return "Custodian [custodianid=" + custodianid + ", custodianname=" + custodianname + ", password=" + password
 				+ "]";
 	}
-	
-	
-	
-	
 
 }

@@ -24,4 +24,14 @@ public class LastTradeHistoryService {
 			return null;
 		}
 	}
+	
+	public LastTradeHistory saveLastTradeHistory(LastTradeHistory  lastTradeHistory) {
+		try {
+			LastTradeHistory lastTrade = this.lastTradeHistoryRepo.save(lastTradeHistory);
+			return lastTrade;	
+		}catch(IllegalArgumentException e )
+		{
+			return null;
+		}
+	}
 }

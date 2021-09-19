@@ -17,9 +17,9 @@ public interface TradeHistoryRepository extends JpaRepository<TradeHistory, Stri
 	  List<TradeHistory> findAllBySendercustodianidOrReceivercustodianid(@Param("sendercustodianid") Custodian sendercustodianid,
 	                                 @Param("receivercustodianid") Custodian receivercustodianid);
 	
-	@Procedure
-	String TRADEMATCH_ALGO(int isbuyorder,String orderid);
-	
+//	@Procedure
+//	String TRADEMATCH_ALGO(int isbuyorder,String orderid);
+//	
 	
 	 long countBySendercustodianid(Custodian custodianid);
 	 

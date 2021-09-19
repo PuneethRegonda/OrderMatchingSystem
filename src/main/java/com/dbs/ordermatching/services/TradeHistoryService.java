@@ -16,6 +16,7 @@ import com.dbs.ordermatching.models.ClientInstrument;
 import com.dbs.ordermatching.models.ClientInstruments;
 import com.dbs.ordermatching.models.Custodian;
 import com.dbs.ordermatching.models.Instrument;
+import com.dbs.ordermatching.models.LastTradeHistory;
 import com.dbs.ordermatching.models.SellInstrument;
 import com.dbs.ordermatching.models.TradeHistory;
 import com.dbs.ordermatching.repositories.BuyInstrumentRepository;
@@ -35,6 +36,8 @@ public class TradeHistoryService {
 	@Autowired
 	private ClientService clientService;
 
+	@Autowired 
+	private LastTradeHistoryService lastTradeHistoryService;
 	@Autowired
 	private ClientInstrumentService clientInstrumentService;
 
@@ -47,15 +50,18 @@ public class TradeHistoryService {
 		}
 	}
 
-	public boolean insertTradeHistory(TradeHistory tradeHistory) {
+	public TradeHistory insertTradeHistory(TradeHistory tradeHistory) throws Exception {
 		if (this.tradeHistoryRepo.findById(tradeHistory.getId()).isPresent())
-			return false;
+			throw new Exception("TradeHistory with id "+tradeHistory.getId()+"already present");
 		try {
-			this.tradeHistoryRepo.save(tradeHistory);
+			
+			TradeHistory trade =  this.tradeHistoryRepo.save(tradeHistory);
+			lastTradeHistoryService.saveLastTradeHistory(new LastTradeHistory(trade.getSendercustodianid().getCustodianid(),trade,new Date()));
+			lastTradeHistoryService.saveLastTradeHistory(new LastTradeHistory(trade.getReceivercustodianid().getCustodianid(),trade,new Date()));
+					return trade;
 		} catch (IllegalArgumentException e) {
-			return false;
+			throw e;
 		}
-		return true;
 	}
 
 	public boolean insertAllTradeHistory(List<TradeHistory> tradeHistorys) throws EntityExistsException {
@@ -115,7 +121,7 @@ public class TradeHistoryService {
 
 			if (sellInstruments == null || sellInstruments.isEmpty()) {
 				System.out.println("No Match found");
-				throw new Exception("No Match dound partially active for now");
+				throw new Exception("No Match found partially active for now");
 			} 
 			else {
 				System.out.println("Match found");
