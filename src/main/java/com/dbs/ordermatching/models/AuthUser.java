@@ -1,5 +1,6 @@
 package com.dbs.ordermatching.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Size;
@@ -10,6 +11,7 @@ public class AuthUser {
 	@Id
 	private String custodianid;
 	@Size(min=8)
+	@Column(nullable = false)
 	private String password;
 	
 	public AuthUser() {

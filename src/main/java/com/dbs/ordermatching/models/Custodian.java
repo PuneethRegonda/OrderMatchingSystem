@@ -22,6 +22,7 @@ public class Custodian implements Serializable{
 	private String custodianid;
 	
 	@Column(unique = true)
+	
 	private String custodianname;
 	
 	

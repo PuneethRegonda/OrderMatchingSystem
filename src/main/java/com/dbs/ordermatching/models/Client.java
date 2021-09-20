@@ -24,9 +24,9 @@ public class Client {
 	@JoinColumn(name="custodianid")
 	@JsonDeserialize(using = CustodianDeserializer.class)  
 	private Custodian custodianid;
-	
+	@Column(nullable = false)
 	private BigDecimal transactionlimit;
-//	
+	@Column(nullable = false)
 	private BigDecimal balance;
 	
 	public Client() {

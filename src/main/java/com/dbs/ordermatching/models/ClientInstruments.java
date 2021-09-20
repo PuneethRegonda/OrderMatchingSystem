@@ -26,7 +26,7 @@ public class ClientInstruments {
     @ManyToOne
     @JoinColumn(name="instrumentid")
 	private Instrument instrumentid;
-	
+    @Column(nullable = false)
 	private double quantity;
 	
 	public ClientInstruments() {
@@ -34,7 +34,9 @@ public class ClientInstruments {
 	}
 	
 	public ClientInstruments( Client clientid, Instrument instrumentid, double quantity) {
+		
 		super();
+		this.id = String.format("%s###%s", clientid.getClientid(),instrumentid.getInstrumentid());
 		this.clientid = clientid;
 		this.instrumentid = instrumentid;
 		this.quantity = quantity;
@@ -55,6 +57,7 @@ public class ClientInstruments {
 	}
 
 	public void setId(String id) {
+		if(id==null) this.id = this.clientid.getClientid()+this.instrumentid.getInstrumentid();
 		this.id = id;
 	}
 

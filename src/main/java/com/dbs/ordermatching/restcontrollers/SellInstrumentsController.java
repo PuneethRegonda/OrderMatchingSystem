@@ -80,6 +80,7 @@ public class SellInstrumentsController {
 		try {
 			
 			
+			if(sellinstrument.getIsactive()==null) sellinstrument.setIsactive(true);
 			Client client = clientService.findClientById(sellinstrument.clientid.getClientid());
 			BigDecimal totalTransaction = new  BigDecimal(sellinstrument.getPrice()*sellinstrument.getQuantity());
 			if(client.getBalance().compareTo(totalTransaction)==-1) {
@@ -99,7 +100,6 @@ public class SellInstrumentsController {
 			System.out.println("Sell InstrumentID: "+sellinstrumentId);
 			result.data = tradeHistoryService.tradematchingEngine(sellinstrumentId, false);
 		
-			
 			
 			result.setStatus(true);
 			result.setMessage("SellInstrument saved successfully");

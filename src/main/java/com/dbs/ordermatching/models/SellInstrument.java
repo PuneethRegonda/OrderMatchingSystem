@@ -3,6 +3,7 @@ package com.dbs.ordermatching.models;
 import java.time.LocalDate;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +15,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.NonNull;
 
 import com.dbs.ordermatching.utils.MyGenerator;
 
@@ -32,11 +34,11 @@ public class SellInstrument {
     @ManyToOne
     @JoinColumn(name="instrumentid")
 	public Instrument instrumentid;
-
+	@Column(nullable = false) 	
 	public double price;
-	
+	@Column(nullable = false)
 	public double quantity;
-	
+	@Column(nullable = false)
 	public Boolean isactive;
 	
 	@Temporal(TemporalType.TIMESTAMP)

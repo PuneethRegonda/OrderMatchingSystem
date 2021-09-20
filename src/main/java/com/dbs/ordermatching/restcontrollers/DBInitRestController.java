@@ -130,7 +130,7 @@ public class DBInitRestController {
 			instruments.forEach(instrument->{
 				clientInstruments.add(new ClientInstruments("DBS001###"+instrument.getInstrumentid(),new Client("DBS001"), instrument, 100));
 				clientInstruments.add(new ClientInstruments("DBS002###"+instrument.getInstrumentid(),new Client("DBS002"), instrument, 50));
-				clientInstruments.add(new ClientInstruments("DBS005###"+instrument.getInstrumentid(),new Client("DBS002"), instrument, 50));
+				clientInstruments.add(new ClientInstruments("DBS005###"+instrument.getInstrumentid(),new Client("DBS005"), instrument, 50));
 			});
 			
 			clientInstrumentRepo.saveAll(clientInstruments);

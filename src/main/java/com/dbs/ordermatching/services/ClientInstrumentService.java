@@ -57,28 +57,35 @@ public class ClientInstrumentService {
 		try {
 			return this.clientInstrumentsRepo.findAllByClientid(clientid);
 		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(e);
+			System.err.println("loadAllInstrumentsByClientId");
+			throw new IllegalArgumentException("Error: Got id Null"+clientid);
 		}
 	}
 	
 	public ClientInstruments loadClientInstrumersByCliesntIdAndInstrumentId(Client clientid,Instrument instrumentid) throws IllegalArgumentException {
+		String id = clientid.getClientid()+"###"+instrumentid.getInstrumentid();
+		
 		try {
-			Optional<ClientInstruments> clientInstruments= this.clientInstrumentsRepo.findById(String.format("%s%s%s", clientid.getClientid(),"###" ,instrumentid.getInstrumentid()));
+			Optional<ClientInstruments> clientInstruments= this.clientInstrumentsRepo.findById(id);
 			return clientInstruments.orElseThrow(()->{	
 				return new EntityNotFoundException(String.format("Client with id %s has no Instrument with id %s",clientid.getClientid(),instrumentid.getInstrumentid()));
 			});
 		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(e);
+			System.err.println("ERROR with ClientInstruments id:"+id);
+			throw new IllegalArgumentException("Error: Got id Null"+clientid +"*"+instrumentid);
 		}
 	}
 
 	public boolean updateClientInstrumenets(ClientInstruments clientIntrument) throws IllegalArgumentException{
 		
 		try {
+			System.out.println("Saving "+clientIntrument);
+			if(clientIntrument.getId()==null) clientIntrument.setId(null);;
 			if(clientIntrument.getQuantity()<=0) this.clientInstrumentsRepo.delete(clientIntrument);
+			
 			this.clientInstrumentsRepo.save(clientIntrument);
 		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(e);
+			throw new IllegalArgumentException("Error: Got id Null"+clientIntrument);
 		}
 		return true;
 	}

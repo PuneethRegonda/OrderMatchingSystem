@@ -68,7 +68,8 @@ public class BuyInstrumentsController {
 		
 		Result result = new Result();
 		try {
-			
+			if(buyinstrument.getIsactive()==null)
+				buyinstrument.setIsactive(true);
 			Client client = buyinstrument.clientid;
 			BigDecimal totalTransaction = new  BigDecimal(buyinstrument.getPrice()*buyinstrument.getQuantity());
 			if(client.getBalance().compareTo(totalTransaction)==-1) {
