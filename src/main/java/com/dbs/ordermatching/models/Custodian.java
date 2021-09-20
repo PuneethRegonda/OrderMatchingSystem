@@ -24,8 +24,7 @@ public class Custodian implements Serializable{
 	@Column(unique = true)
 	private String custodianname;
 	
-	@Size(min=8)
-	private String password;
+	
 	
 	public Custodian() {
 		
@@ -35,7 +34,7 @@ public class Custodian implements Serializable{
 		super();
 	    this.custodianid=custodianid;
 		this.custodianname = custodianname;
-		this.password = "";
+		
 	}
 	
 
@@ -43,7 +42,7 @@ public class Custodian implements Serializable{
 		super();
 	    this.custodianid=custodianid;
 		this.custodianname = "";
-		this.password = "";
+		
 	}
 
 	public String getCustodianid() {
@@ -64,18 +63,11 @@ public class Custodian implements Serializable{
 	}
 
 
-	public String getPassword() {
-		return password;
-	}
 
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	@Override
 	public String toString() {
-		return "Custodian [custodianid=" + custodianid + ", custodianname=" + custodianname + ", password=" + password
+		return "Custodian [custodianid=" + custodianid + ", custodianname=" + custodianname 
 				+ "]";
 	}
 

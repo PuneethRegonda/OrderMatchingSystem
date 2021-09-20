@@ -38,7 +38,6 @@ public class ClientController {
 			Result result = new Result();
 			try { 
 				Client client = this.clientService.findClientById(clientid);
-				client.getCustodianid().setPassword("");
 				result.setStatus(true);
 				result.setMessage("Client found");
 				result.data = client;

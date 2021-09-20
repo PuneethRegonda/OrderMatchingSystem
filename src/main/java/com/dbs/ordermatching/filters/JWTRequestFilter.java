@@ -22,7 +22,6 @@ import com.dbs.ordermatching.utils.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 
 
-
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter{
 	
@@ -49,7 +48,7 @@ public class JWTRequestFilter extends OncePerRequestFilter{
 		
 		if(authorizationHeader!=null && authorizationHeader.startsWith("Bearer ")) {
 			jwt = authorizationHeader.substring(7);
-			custodianid= jwtutil.extractUsername(jwt);
+			custodianid = jwtutil.extractUsername(jwt);
 		}
 		
 		if(custodianid!=null && SecurityContextHolder.getContext().getAuthentication()==null) {
@@ -63,6 +62,7 @@ public class JWTRequestFilter extends OncePerRequestFilter{
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 			}
 		}
+		
 	}catch(ExpiredJwtException e) {
 		
 		request.setAttribute("Exception", e);

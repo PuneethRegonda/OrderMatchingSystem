@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dbs.ordermatching.models.AuthenticationRequest;
+import com.dbs.ordermatching.models.AuthUser;
 import com.dbs.ordermatching.models.AuthenticationResponse;
 import com.dbs.ordermatching.models.Result;
 import com.dbs.ordermatching.services.UserDetailService;
@@ -41,25 +41,20 @@ public class AuthenticationController {
 	
 	
 	@PostMapping("/authenticate")
-	public ResponseEntity<?> DoAuthentication(@RequestBody AuthenticationRequest authenticationrequest)  throws Exception{
+	public ResponseEntity<?> DoAuthentication(@RequestBody AuthUser authenticationrequest)  throws Exception{
 		
 //		System.out.println(authenticationrequest);
 		try {
 		this.authenticationmanager.authenticate(
-				
 	      new UsernamePasswordAuthenticationToken(authenticationrequest.getCustodianid(), authenticationrequest.getPassword())
-		
 		);
 		}catch(BadCredentialsException e) {
 		   throw new Exception("Incorrect CustodianID or Password ",e);
 		}
-		
 		final UserDetails userdetails  = userdetailsservice.loadUserByUsername(authenticationrequest.getCustodianid());
 		
 		final String jwt = jwtutil.generateToken(userdetails);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(new Result(true, "successfull", jwt));
-
-		
 	}
 }

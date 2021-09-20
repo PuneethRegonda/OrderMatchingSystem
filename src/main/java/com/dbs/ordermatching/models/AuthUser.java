@@ -1,18 +1,23 @@
 package com.dbs.ordermatching.models;
 
-public class AuthenticationRequest {
-      
-	private String custodianid;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.Size;
+
+@Entity
+public class AuthUser {
 	
+	@Id
+	private String custodianid;
+	@Size(min=8)
 	private String password;
 	
-	
-	public AuthenticationRequest() {
+	public AuthUser() {
 		
 	}
 
 
-	public AuthenticationRequest(String custodianid, String password) {
+	public AuthUser(String custodianid, String password) {
 		super();
 		this.custodianid = custodianid;
 		this.password = password;

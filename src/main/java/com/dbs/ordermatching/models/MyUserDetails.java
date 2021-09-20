@@ -21,7 +21,7 @@ public class MyUserDetails implements UserDetails{
 		
 	}
 	
-	public MyUserDetails(Custodian custodian) {
+	public MyUserDetails(AuthUser custodian) {
 		
 		this.custodianid  = custodian.getCustodianid();
 		this.password = custodian.getPassword();

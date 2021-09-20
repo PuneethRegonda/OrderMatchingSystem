@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dbs.ordermatching.models.AuthUser;
 import com.dbs.ordermatching.models.BuyInstrument;
 import com.dbs.ordermatching.models.Client;
 import com.dbs.ordermatching.models.ClientInstrument;
@@ -21,6 +22,7 @@ import com.dbs.ordermatching.models.Instrument;
 import com.dbs.ordermatching.models.LastTradeHistory;
 import com.dbs.ordermatching.models.SellInstrument;
 import com.dbs.ordermatching.models.TradeHistory;
+import com.dbs.ordermatching.repositories.AuthUserRepository;
 import com.dbs.ordermatching.repositories.BuyInstrumentRepository;
 import com.dbs.ordermatching.repositories.ClientInstrumentRepository;
 import com.dbs.ordermatching.repositories.ClientInstrumentsRepository;
@@ -66,6 +68,11 @@ public class DBInitRestController {
 	private LastTradeHistoryRepository lastTradeRepo;
 	
 	
+	
+	@Autowired 
+	private AuthUserRepository authUserRepo;
+	
+	
 	@Autowired 
 	private InstrumentRepository instrumentRepo;
 	@GetMapping
@@ -85,6 +92,16 @@ public class DBInitRestController {
 			for (Custodian custodian: custodians) {
 				System.out.println(custodian);
 			}
+			
+			/**
+			 * AuthUser table
+			 */
+			List<AuthUser> authUser = Arrays.asList(mapper.readValue(DBInit.AUTHUSERS, AuthUser[].class));
+			authUserRepo.saveAll(authUser);
+			for (AuthUser custodian: authUser) {
+				System.out.println(custodian);
+			}
+			
 			/**
 			 *  Client table
 			 */

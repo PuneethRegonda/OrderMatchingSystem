@@ -43,7 +43,7 @@ public class PortfolioController {
 		Result result = new Result();
 		try { 
 			Client client = this.clientService.findClientById(clientid);
-			client.getCustodianid().setPassword("");
+			
 			
 			List<BuyInstrument> buys=  buySellService.loadBuyInstrumentsByClientId(client);
 			List<SellInstrument> sells=  buySellService.loadSellInstrumentsByClientId(client);
