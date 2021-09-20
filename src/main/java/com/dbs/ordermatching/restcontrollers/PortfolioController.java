@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dbs.ordermatching.models.BuyInstrument;
 import com.dbs.ordermatching.models.Client;
+import com.dbs.ordermatching.models.ClientInstruments;
 import com.dbs.ordermatching.models.Result;
 import com.dbs.ordermatching.models.SellInstrument;
 import com.dbs.ordermatching.services.BuySellInstrumentService;
+import com.dbs.ordermatching.services.ClientInstrumentService;
 import com.dbs.ordermatching.services.ClientService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -36,6 +38,9 @@ public class PortfolioController {
 
 	@Autowired
 	private BuySellInstrumentService buySellService ;
+
+	@Autowired
+	private ClientInstrumentService clientInstrumentService ;
 	
 	
 	@GetMapping("/{clientid}/{custodianid}")
@@ -47,13 +52,14 @@ public class PortfolioController {
 			
 			List<BuyInstrument> buys=  buySellService.loadBuyInstrumentsByClientId(client);
 			List<SellInstrument> sells=  buySellService.loadSellInstrumentsByClientId(client);
- 			
+ 			List<ClientInstruments> clientInstruments = clientInstrumentService.loadAllInstrumentsByClientId(client);
 			result.setStatus(true);
 			result.setMessage("Client portfolio found");
 			result.data = Map.of(
 					"client",client,
 					"buy",buys,
-					"sell",sells
+					"sell",sells,
+					"clientInstruments",clientInstruments
 					);
 
 			return ResponseEntity.status(HttpStatus.OK).body(result);			

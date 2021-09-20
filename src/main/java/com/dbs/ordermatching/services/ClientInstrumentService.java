@@ -53,7 +53,7 @@ public class ClientInstrumentService {
 	
 
 
-	public List<ClientInstruments> loadAllBuyInstrumentsByClientId(Client clientid) throws IllegalArgumentException {
+	public List<ClientInstruments> loadAllInstrumentsByClientId(Client clientid) throws IllegalArgumentException {
 		try {
 			return this.clientInstrumentsRepo.findAllByClientid(clientid);
 		} catch (IllegalArgumentException e) {

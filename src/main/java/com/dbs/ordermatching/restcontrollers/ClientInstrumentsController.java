@@ -38,7 +38,7 @@ public class ClientInstrumentsController {
 		public ResponseEntity<Result> findAllClientInstrumentsByClientId(@PathVariable String clientid) {
 			Result result = new Result();
 			try { 
-				List<ClientInstruments> clientInstruments = this.clientInstrumentService.loadAllBuyInstrumentsByClientId(new Client(clientid));
+				List<ClientInstruments> clientInstruments = this.clientInstrumentService.loadAllInstrumentsByClientId(new Client(clientid));
 				result.setStatus(true);
 				result.setMessage("Client Instruments found.");
 				result.data = clientInstruments;
